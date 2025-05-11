@@ -5,38 +5,40 @@
     <title>Markerless AR Lantern</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- 1) A-Frame core -->
+    <!-- A-Frame core (self-hosted) -->
     <script src="assets/libs/aframe.min.js"></script>
+    <!-- AR hit-test component -->
+    <script src="https://cdn.jsdelivr.net/npm/aframe-ar-hit-test-component@1.0.4/dist/aframe-ar-hit-test-component.min.js"></script>
   </head>
   <body style="margin:0; overflow:hidden;">
-
     <a-scene
-      vr-mode-ui="enabled: false"
+      vr-mode-ui="enabled: false"  
       embedded
-      webxr="optionalFeatures: hit-test;"        
+      renderer="colorManagement: true, physicallyCorrectLights"
+      ar-hit-test="target: #lantern;"
     >
-
-      <!-- 1) Your lantern model, initially hidden -->
-      <a-entity 
-        id="lantern" 
+      <!-- 1) Your lantern (initially hidden) -->
+      <a-entity
+        id="lantern"
         visible="false"
-        gltf-model="url(assets/lantern.glb)" 
+        gltf-model="url(assets/lantern.glb)"
         scale="0.2 0.2 0.2"
         rotation="0 180 0"
       >
         <a-animation
           attribute="position"
-          dur="2000" direction="alternate" repeat="indefinite"
+          dur="2000"
+          direction="alternate"
+          repeat="indefinite"
           to="0 0.1 0"
         ></a-animation>
       </a-entity>
 
-      <!-- 2) Hit-test component, targets the lantern -->
+      <!-- 2) Hit-test controller (shows reticle, places lantern on tap) -->
       <a-entity ar-hit-test="target: #lantern;"></a-entity>
 
-      <!-- 3) Simple camera for AR -->
+      <!-- 3) AR camera -->
       <a-camera></a-camera>
     </a-scene>
-
   </body>
 </html>
