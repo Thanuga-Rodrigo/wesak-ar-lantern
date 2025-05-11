@@ -2,19 +2,53 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Wesak Lantern AR</title>
+  <title>Wesak Lantern AR with Confetti</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+  
   <!-- model-viewer library -->
   <script type="module"
     src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
   </script>
+  <!-- canvas-confetti for the confetti effect -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  
   <style>
-    body, html { margin:0; padding:0; height:100%; overflow:hidden; }
-    model-viewer { width:100%; height:100%; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: sans-serif;
+    }
+    /* fill the viewport with the AR model-viewer */
+    model-viewer {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0; left: 0;
+    }
+    /* full-screen canvas for confetti */
+    #confetti-canvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;  /* allow taps to pass through */
+    }
+    /* overlay text */
+    #overlay-text {
+      position: absolute;
+      top: 20px; left: 50%;
+      transform: translateX(-50%);
+      color: #ffd700;
+      font-size: 2rem;
+      text-shadow: 0 0 8px rgba(0,0,0,0.7);
+      z-index: 10;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
+  <!-- AR model-viewer -->
   <model-viewer
     src="assets/lantern.glb"
     ios-src="assets/lantern.usdz"
@@ -26,5 +60,28 @@
     auto-rotate
     loading="eager"
   ></model-viewer>
+  
+  <!-- Confetti canvas -->
+  <canvas id="confetti-canvas"></canvas>
+  <!-- Overlay message -->
+  <div id="overlay-text">Happy Wesak!</div>
+
+  <script>
+    // Setup confetti on the full-screen canvas
+    const confettiCanvas = document.getElementById('confetti-canvas');
+    const myConfetti = confetti.create(confettiCanvas, {
+      resize: true,    // will fit the canvas to full screen
+      useWorker: true  // use a web worker for better performance
+    });
+    
+    // Fire a burst of confetti every 2 seconds
+    setInterval(() => {
+      myConfetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.2 }
+      });
+    }, 2000);
+  </script>
 </body>
 </html>
