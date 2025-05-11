@@ -2,26 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Markerless AR Lantern1</title>
+  <title>Markerless AR Lantern2</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-  <!-- 1) A-Frame core -->
+  <!-- 1) WebXR Polyfill for broader support -->
+  <script src="https://cdn.jsdelivr.net/npm/webxr-polyfill@latest/dist/webxr-polyfill.js"></script>
+  
+  <!-- 2) A-Frame core -->
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-  <!-- 2) AR hit-test component (WebXR hit-test API) -->
-  <script src="https://cdn.jsdelivr.net/npm/aframe-ar-hit-test-component@1.0.4/dist/aframe-ar-hit-test-component.min.js"></script>
+  
+  <!-- 3) Updated AR hit-test component -->
+  <script src="https://cdn.jsdelivr.net/npm/aframe-ar-hit-test-component@latest/dist/aframe-ar-hit-test-component.min.js"></script>
 </head>
 <body style="margin:0; overflow:hidden;">
   <a-scene
     vr-mode-ui="enabled: false"
     embedded
-    renderer="colorManagement: true, physicallyCorrectLights"
+    renderer="colorManagement: true; physicallyCorrectLights: true"
+    xr-mode="ar: true;"
   >
-    <!-- Lantern model, hidden until user taps to place -->
+    <!-- Lantern model -->
     <a-entity
       id="lantern"
       visible="false"
       gltf-model="url(assets/lantern.glb)"
-      crossOrigin="anonymous"
       scale="0.2 0.2 0.2"
       rotation="0 180 0"
     >
@@ -34,7 +38,7 @@
       ></a-animation>
     </a-entity>
 
-    <!-- Hit-test: shows reticle and on tap makes #lantern visible at that spot -->
+    <!-- Hit-test component -->
     <a-entity ar-hit-test="target: #lantern;"></a-entity>
 
     <!-- AR camera -->
