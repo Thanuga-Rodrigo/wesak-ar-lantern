@@ -2,24 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Markerless AR Lantern3</title>
+  <title>Markerless AR Lantern4</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-  <!-- 1) A-Frame core -->
-  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-  <!-- 2) WebXR hit-test component -->
-  <script src="https://cdn.jsdelivr.net/npm/aframe-ar-hit-test-component@1.0.4/dist/aframe-ar-hit-test-component.min.js"></script>
+  <!-- A-Frame v1.7.0 (includes ar-hit-test component) -->
+  <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>  <!-- :contentReference[oaicite:0]{index=0} -->
 </head>
 <body style="margin:0; overflow:hidden;">
+
   <a-scene
-    vr-mode-ui="enabled: false"
     embedded
-    webxr="optionalFeatures: hit-test;"            
-    ar-hit-test="target: #lantern;"                
+    vr-mode-ui="enabled: false"
+    webxr="optionalFeatures: hit-test;"               
+    ar-hit-test="target: #lantern;"                   
     renderer="colorManagement: true, physicallyCorrectLights"
     background="color: #000"
   >
-    <!-- Your lantern, hidden until placement -->
+    <!-- 1) Your lantern, hidden until placed -->
     <a-entity
       id="lantern"
       visible="false"
@@ -37,8 +36,9 @@
       ></a-animation>
     </a-entity>
 
-    <!-- AR camera -->
+    <!-- 2) AR camera -->
     <a-camera></a-camera>
   </a-scene>
+
 </body>
 </html>
