@@ -2,28 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Markerless AR Lantern5</title>
+  <title>Markerless AR Lantern (Debug)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-  <!-- A-Frame v1.7.0 (includes ar-hit-test component) -->
-  <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>  <!-- :contentReference[oaicite:0]{index=0} -->
+  <!-- A-Frame 1.7.0 (includes webxr + ar-hit-test) -->
+  <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
 </head>
 <body style="margin:0; overflow:hidden;">
 
   <a-scene
     embedded
-    vr-mode-ui="enabled: true"
-    webxr="optionalFeatures: hit-test;"               
-    ar-hit-test="target: #lantern;"                   
+    vr-mode-ui="enabled: true"                
+    webxr="optionalFeatures: hit-test;"        
+    ar-hit-test="target: #lantern;"            
     renderer="colorManagement: true, physicallyCorrectLights"
-    background="color: #000"
   >
-    <!-- 1) Your lantern, hidden until placed -->
+
+    <!-- ---------- DEBUG OBJECTS ---------- -->
+    <!-- 1) A simple sky so it's not just black -->
+    <a-sky color="#ECECEC"></a-sky>
+    <!-- 2) A box floating in front so you know the scene loaded -->
+    <a-box position="0 1.5 -3" color="#4CC3D9" depth="0.5" height="0.5" width="0.5"></a-box>
+    <!-- ----------------------------------- -->
+
+    <!-- Your lantern, hidden until tapped -->
     <a-entity
       id="lantern"
       visible="false"
       gltf-model="url(assets/lantern.glb)"
-      crossOrigin="anonymous"
       scale="0.2 0.2 0.2"
       rotation="0 180 0"
     >
@@ -36,9 +42,16 @@
       ></a-animation>
     </a-entity>
 
-    <!-- 2) AR camera -->
+    <!-- AR camera -->
     <a-camera></a-camera>
   </a-scene>
 
+  <script>
+    const scene = document.querySelector('a-scene');
+    // Log AR/VR lifecycle so you know what's happening
+    ['enter-vr','exit-vr','enter-xr','exit-xr'].forEach(evt => {
+      scene.addEventListener(evt, () => console.log(evt + ' fired'));
+    });
+  </script>
 </body>
 </html>
