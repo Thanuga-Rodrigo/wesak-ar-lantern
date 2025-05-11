@@ -1,31 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Markerless AR Lantern (Debug)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta charset="UTF-8"/>
+  <title>Markerless AR Lantern (Debug)1</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 
-  <!-- A-Frame 1.7.0 (includes webxr + ar-hit-test) -->
-  <script src="https://aframe.io/releases/1.7.0/aframe.min.js"></script>
+  <!-- self-hosted A-Frame -->
+  <script src="assets/libs/aframe.min.js"></script>
 </head>
 <body style="margin:0; overflow:hidden;">
 
   <a-scene
     embedded
-    vr-mode-ui="enabled: true"                
-    webxr="optionalFeatures: hit-test;"        
-    ar-hit-test="target: #lantern;"            
+    vr-mode-ui="enabled: true"
+    webxr="optionalFeatures: hit-test;"
+    ar-hit-test="target: #lantern;"
     renderer="colorManagement: true, physicallyCorrectLights"
   >
-
-    <!-- ---------- DEBUG OBJECTS ---------- -->
-    <!-- 1) A simple sky so it's not just black -->
+    <!-- debug sky & box -->
     <a-sky color="#ECECEC"></a-sky>
-    <!-- 2) A box floating in front so you know the scene loaded -->
     <a-box position="0 1.5 -3" color="#4CC3D9" depth="0.5" height="0.5" width="0.5"></a-box>
-    <!-- ----------------------------------- -->
 
-    <!-- Your lantern, hidden until tapped -->
+    <!-- your lantern model -->
     <a-entity
       id="lantern"
       visible="false"
@@ -35,23 +31,20 @@
     >
       <a-animation
         attribute="position"
-        dur="2000"
-        direction="alternate"
-        repeat="indefinite"
+        dur="2000" direction="alternate" repeat="indefinite"
         to="0 0.1 0"
       ></a-animation>
     </a-entity>
 
-    <!-- AR camera -->
     <a-camera></a-camera>
   </a-scene>
 
   <script>
+    // log lifecycle and hit-test events
     const scene = document.querySelector('a-scene');
-    // Log AR/VR lifecycle so you know what's happening
-    ['enter-vr','exit-vr','enter-xr','exit-xr'].forEach(evt => {
-      scene.addEventListener(evt, () => console.log(evt + ' fired'));
-    });
+    ['enter-xr','exit-xr','ar-hit-test-select'].forEach(evt =>
+      scene.addEventListener(evt, () => console.log(evt + ' fired'))
+    );
   </script>
 </body>
 </html>
