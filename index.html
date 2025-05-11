@@ -1,48 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Wesak AR Lantern</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  
-  <!-- 1) A-Frame core -->
-  <script src="assets/libs/aframe.min.js"></script>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Markerless AR Lantern</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- 2) MindAR core (defines MINDAR.IMAGE) -->
-  <script src="assets/libs/mindar-image.prod.js"></script>
+    <!-- 1) A-Frame core -->
+    <script src="assets/libs/aframe.min.js"></script>
+  </head>
+  <body style="margin:0; overflow:hidden;">
 
-  <!-- 3) MindAR A-Frame integration (requires both AFRAME & MINDAR.IMAGE) -->
-  <script src="assets/libs/mindar-image-aframe.prod.js"></script>
-</head>
-<body style="margin: 0; overflow: hidden;">
-  <a-scene
-    mindar-image="
-      imageTargetSrc: assets/wesak-target.mind;
-      autoStart: true;
-      crossOrigin: anonymous
-    "
-    embedded
-    renderer="colorManagement: true, physicallyCorrectLights"
-    background="color: #000"
-  >
-    <a-entity mindar-image-target="targetIndex: 0">
-      <a-entity
-        gltf-model="url(assets/lantern.glb)"
-        crossOrigin="anonymous"
+    <a-scene
+      vr-mode-ui="enabled: false"
+      embedded
+      webxr="optionalFeatures: hit-test;"        
+    >
+
+      <!-- 1) Your lantern model, initially hidden -->
+      <a-entity 
+        id="lantern" 
+        visible="false"
+        gltf-model="url(assets/lantern.glb)" 
         scale="0.2 0.2 0.2"
         rotation="0 180 0"
       >
         <a-animation
           attribute="position"
-          dur="2000"
-          direction="alternate"
-          repeat="indefinite"
+          dur="2000" direction="alternate" repeat="indefinite"
           to="0 0.1 0"
         ></a-animation>
       </a-entity>
-      <a-light type="point" intensity="1" distance="2" position="0 0.3 0"></a-light>
-    </a-entity>
-    <a-camera position="0 0 0"></a-camera>
-  </a-scene>
-</body>
+
+      <!-- 2) Hit-test component, targets the lantern -->
+      <a-entity ar-hit-test="target: #lantern;"></a-entity>
+
+      <!-- 3) Simple camera for AR -->
+      <a-camera></a-camera>
+    </a-scene>
+
+  </body>
 </html>
