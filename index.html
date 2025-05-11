@@ -2,54 +2,55 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Wesak Lantern AR with Confetti</title>
+  <title>Wesak Lantern AR – Tap to Start</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
+
   <!-- model-viewer library -->
   <script type="module"
     src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
   </script>
-  <!-- canvas-confetti for the confetti effect -->
+  <!-- canvas-confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-  
+
   <style>
     html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
+      margin: 0; padding: 0; height: 100%; overflow: hidden;
       font-family: sans-serif;
     }
-    /* fill the viewport with the AR model-viewer */
     model-viewer {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0; left: 0;
-    }
-    /* full-screen canvas for confetti */
-    #confetti-canvas {
-      position: absolute;
-      top: 0; left: 0;
       width: 100%; height: 100%;
-      pointer-events: none;  /* allow taps to pass through */
+      position: absolute; top: 0; left: 0;
     }
-    /* overlay text */
-    #overlay-text {
-      position: absolute;
-      top: 20px; left: 50%;
-      transform: translateX(-50%);
-      color: #ffd700;
-      font-size: 2rem;
-      text-shadow: 0 0 8px rgba(0,0,0,0.7);
-      z-index: 10;
+    /* tap-to-start overlay */
+    #startOverlay {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      color: white; display: flex;
+      align-items: center; justify-content: center;
+      font-size: 2rem; z-index: 20;
+      cursor: pointer;
+    }
+    /* confetti canvas */
+    #confetti-canvas {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
       pointer-events: none;
+    }
+    /* overlay message */
+    #overlay-text {
+      position: absolute; top: 20px; left: 50%;
+      transform: translateX(-50%);
+      color: #ffd700; font-size: 2rem;
+      text-shadow: 0 0 8px rgba(0,0,0,0.7);
+      z-index: 10; pointer-events: none;
     }
   </style>
 </head>
 <body>
   <!-- AR model-viewer -->
   <model-viewer
+    id="mv"
     src="assets/lantern.glb"
     ios-src="assets/lantern.usdz"
     ar
@@ -60,28 +61,38 @@
     auto-rotate
     loading="eager"
   ></model-viewer>
-  
-  <!-- Confetti canvas -->
+
+  <!-- tap-to-start full-screen overlay -->
+  <div id="startOverlay">Tap to enter AR</div>
+
+  <!-- confetti canvas -->
   <canvas id="confetti-canvas"></canvas>
-  <!-- Overlay message -->
+  <!-- static overlay text -->
   <div id="overlay-text">Happy Wesak!</div>
 
   <script>
-    // Setup confetti on the full-screen canvas
+    // Setup confetti
     const confettiCanvas = document.getElementById('confetti-canvas');
     const myConfetti = confetti.create(confettiCanvas, {
-      resize: true,    // will fit the canvas to full screen
-      useWorker: true  // use a web worker for better performance
+      resize: true, useWorker: true
     });
-    
-    // Fire a burst of confetti every 2 seconds
     setInterval(() => {
-      myConfetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.2 }
-      });
+      myConfetti({ particleCount: 100, spread: 70, origin: { y: 0.2 } });
     }, 2000);
+
+    // On first tap, trigger AR
+    const overlay = document.getElementById('startOverlay');
+    const mv = document.getElementById('mv');
+    overlay.addEventListener('click', async () => {
+      try {
+        // Activate AR (WebXR or Quick Look)
+        await mv.activateAR();
+        // Hide the overlay once AR UI appears
+        overlay.style.display = 'none';
+      } catch(err) {
+        console.warn('AR activation failed or was cancelled', err);
+      }
+    }, { once: true });
   </script>
 </body>
 </html>
