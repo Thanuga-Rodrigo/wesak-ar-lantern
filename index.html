@@ -2,28 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Markerless AR Lantern</title>
+  <title>Markerless AR Lantern1</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
   <!-- Self-hosted A-Frame v1.7.0 -->
   <script src="assets/libs/aframe.min.js"></script>
 </head>
-<body style="margin:0; overflow:hidden;">
+<body style="margin:0; overflow:hidden; font-family: sans-serif; color: #fff; background: #000;">
+  <!-- Debug overlay -->
+  <div id="debug" style="position:absolute;top:0;left:0;padding:8px;z-index:999;">
+    Checking AR support…
+  </div>
 
   <a-scene
     embedded
-    vr-mode-ui="enabled: true"                     
-    webxr="optionalFeatures: hit-test; requiredFeatures: hit-test"  
-                                                    
-    ar-hit-test="target: #lantern;"                 
+    vr-mode-ui="enabled: true"
+    webxr="optionalFeatures: hit-test; requiredFeatures: hit-test"
+    ar-hit-test="target: #lantern;"
     renderer="colorManagement: true, physicallyCorrectLights"
     background="color: #000"
   >
-    <!-- Debug sky & box so you know the scene is alive -->
-    <a-sky color="#ECECEC"></a-sky>
-    <a-box position="0 1.5 -3" color="#4CC3D9" depth="0.5" height="0.5" width="0.5"></a-box>
+    <!-- debug sky & box just in case -->
+    <a-sky color="#333"></a-sky>
+    <a-box position="0 1.5 -3" color="#4CC3D9"></a-box>
 
-    <!-- Your lantern, hidden until the user taps to place it -->
     <a-entity
       id="lantern"
       visible="false"
@@ -39,18 +41,25 @@
         to="0 0.1 0"
       ></a-animation>
     </a-entity>
-
-    <!-- Standard A-Frame camera -->
     <a-camera></a-camera>
   </a-scene>
 
   <script>
-    // Log AR lifecycle & hit-test events for debugging
-    const sceneEl = document.querySelector('a-scene');
-    ['enter-xr','exit-xr','ar-hit-test-start','ar-hit-test-achieved','ar-hit-test-select']
-      .forEach(evt =>
-        sceneEl.addEventListener(evt, () => console.log(evt + ' fired'))
-      );
+    const debug = document.getElementById('debug');
+    if (!navigator.xr) {
+      debug.innerText = 'WebXR not available on this browser.';
+    } else {
+      navigator.xr.isSessionSupported('immersive-ar')
+        .then(supported => {
+          debug.innerText = supported
+            ? '✅ AR supported — tap the VR button to enter AR'
+            : '❌ AR not supported by your device/browser';
+        })
+        .catch(err => {
+          debug.innerText = 'Error checking AR support: ' + err.message;
+        });
+    }
   </script>
 </body>
+
 </html>
