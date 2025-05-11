@@ -1,50 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <title>Markerless AR Lantern (Debug)1</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-
-  <!-- self-hosted A-Frame -->
-  <script src="assets/libs/aframe.min.js"></script>
-</head>
-<body style="margin:0; overflow:hidden;">
-
-  <a-scene
-    embedded
-    vr-mode-ui="enabled: true"
-    webxr="optionalFeatures: hit-test;"
-    ar-hit-test="target: #lantern;"
-    renderer="colorManagement: true, physicallyCorrectLights"
-  >
-    <!-- debug sky & box -->
-    <a-sky color="#ECECEC"></a-sky>
-    <a-box position="0 1.5 -3" color="#4CC3D9" depth="0.5" height="0.5" width="0.5"></a-box>
-
-    <!-- your lantern model -->
-    <a-entity
-      id="lantern"
-      visible="false"
-      gltf-model="url(assets/lantern.glb)"
-      scale="0.2 0.2 0.2"
-      rotation="0 180 0"
-    >
-      <a-animation
-        attribute="position"
-        dur="2000" direction="alternate" repeat="indefinite"
-        to="0 0.1 0"
-      ></a-animation>
-    </a-entity>
-
-    <a-camera></a-camera>
-  </a-scene>
-
-  <script>
-    // log lifecycle and hit-test events
-    const scene = document.querySelector('a-scene');
-    ['enter-xr','exit-xr','ar-hit-test-select'].forEach(evt =>
-      scene.addEventListener(evt, () => console.log(evt + ' fired'))
-    );
-  </script>
-</body>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>A-Frame Smoke Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Try jsDelivr for A-Frame to avoid ORB issues -->
+    <script src="https://cdn.jsdelivr.net/npm/aframe@1.4.0/dist/aframe.min.js"></script>
+  </head>
+  <body style="margin:0; overflow:hidden;">
+    <a-scene>
+      <!-- Simple box + sky -->
+      <a-sky color="#ECECEC"></a-sky>
+      <a-box position="0 1.5 -3" color="#4CC3D9" depth="0.5" height="0.5" width="0.5"></a-box>
+      <a-camera></a-camera>
+    </a-scene>
+  </body>
 </html>
