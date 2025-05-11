@@ -1,43 +1,35 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>AR Lantern</title>
-  <meta name="viewport" content="width=device-width, user-scalable=no">
-  
-  <!-- 1. OFFICIAL A-FRAME (v1.4.0) -->
-  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-  
-  <!-- 2. WORKING WebXR COMPONENT (from Don McCurdy) -->
-  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.js"></script>
-  
-  <style>
-    #startButton {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 12px 24px;
-      background: rgba(0,0,0,0.7);
-      color: white;
-      border: none;
-      border-radius: 20px;
-      z-index: 999;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <title>Markerless AR Lantern</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+  <!-- Self-hosted A-Frame v1.7.0 -->
+  <script src="assets/libs/aframe.min.js"></script>
 </head>
-<body>
-  <a-scene 
-    vr-mode-ui="enabled: false"
-    renderer="colorManagement: true; physicallyCorrectLights: true"
+<body style="margin:0; overflow:hidden;">
+
+  <a-scene
+    embedded
+    vr-mode-ui="enabled: true"                     
+    webxr="optionalFeatures: hit-test; requiredFeatures: hit-test"  
+                                                    
+    ar-hit-test="target: #lantern;"                 
+    renderer="colorManagement: true, physicallyCorrectLights"
+    background="color: #000"
   >
-    <!-- Lantern -->
+    <!-- Debug sky & box so you know the scene is alive -->
+    <a-sky color="#ECECEC"></a-sky>
+    <a-box position="0 1.5 -3" color="#4CC3D9" depth="0.5" height="0.5" width="0.5"></a-box>
+
+    <!-- Your lantern, hidden until the user taps to place it -->
     <a-entity
       id="lantern"
+      visible="false"
       gltf-model="url(assets/lantern.glb)"
       scale="0.2 0.2 0.2"
       rotation="0 180 0"
-      visible="false"
     >
       <a-animation
         attribute="position"
@@ -48,20 +40,17 @@
       ></a-animation>
     </a-entity>
 
-    <!-- WebXR Controls -->
-    <a-entity xr-hit-test="target: #lantern;"></a-entity>
+    <!-- Standard A-Frame camera -->
     <a-camera></a-camera>
   </a-scene>
 
-  <button id="startButton">START AR</button>
-
   <script>
-    document.querySelector('#startButton').addEventListener('click', () => {
-      const scene = document.querySelector('a-scene');
-      if (scene.hasLoaded) {
-        scene.setAttribute('xr-mode', 'ar');
-      }
-    });
+    // Log AR lifecycle & hit-test events for debugging
+    const sceneEl = document.querySelector('a-scene');
+    ['enter-xr','exit-xr','ar-hit-test-start','ar-hit-test-achieved','ar-hit-test-select']
+      .forEach(evt =>
+        sceneEl.addEventListener(evt, () => console.log(evt + ' fired'))
+      );
   </script>
 </body>
 </html>
